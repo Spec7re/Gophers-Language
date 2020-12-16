@@ -26,29 +26,27 @@ func translateWord(word string) (string, error) {
 
 	word = strings.ToLower(word)
 
-	gophix := "g"
-	wordIndex := strings.Index(word, "xr")
-	if wordIndex == 0 {
-		gophix = "ge"
-	} else {
-		wordIndex = strings.IndexAny(word, "aeiou")
-		if wordIndex >= 2 && word[wordIndex-1:wordIndex+1] == "qu" {
-			wordIndex++
-		}
-	}
-	if wordIndex == -1 {
-		return "Error", fmt.Errorf( "Gophers need atlest one vowel.")
-	}
+	vowelSet := []byte{'a', 'e', 'i','o', 'u' }
+
+	startVowel := bytes.Contains(vowelSet, []byte(word[:1]))
+	secondVowel := bytes.Contains(vowelSet, []byte(word[1:2]))
+
+	fmt.Println(startVowel)
 
 	var gophWord strings.Builder
 
-	if wordIndex == 0 {
-		gophWord.WriteString(gophix)
-	}
-	gophWord.WriteString(word[wordIndex:len(word)])
-	gophWord.WriteString(word[0:wordIndex])
-	if wordIndex != 0 {
-		gophWord.WriteString("ogo")
+	if startVowel {
+		gophWord.WriteString("g"+ word)
+	} else if word[:2] == "xr" {
+			gophWord.WriteString("ge"+ word)
+	} else if startVowel == false {
+		if !secondVowel && word[1:3] != "qu" {
+			gophWord.WriteString(word[2:]+word[:2]+"ogo")
+		} else if secondVowel && word[1:3] != "qu" {
+			gophWord.WriteString(word[1:]+word[:1]+"ogo")
+		} else if word[1:3] == "qu" {
+			gophWord.WriteString(word[3:]+word[:3]+"ogo")
+		}
 	}
 	return gophWord.String(), nil
 }
