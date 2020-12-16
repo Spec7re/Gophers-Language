@@ -3,7 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-  "strings"
+  	"strings"
 	"net/http"
 	"bytes"
 	"io/ioutil"
@@ -31,14 +31,12 @@ func translateWord(word string) (string, error) {
 	startVowel := bytes.Contains(vowelSet, []byte(word[:1]))
 	secondVowel := bytes.Contains(vowelSet, []byte(word[1:2]))
 
-	fmt.Println(startVowel)
-
 	var gophWord strings.Builder
 
 	if startVowel {
 		gophWord.WriteString("g"+ word)
 	} else if word[:2] == "xr" {
-			gophWord.WriteString("ge"+ word)
+		gophWord.WriteString("ge"+ word)
 	} else if startVowel == false {
 		if !secondVowel && word[1:3] != "qu" {
 			gophWord.WriteString(word[2:]+word[:2]+"ogo")
