@@ -38,7 +38,7 @@ func translateWord(word string) (string, error) {
 	if startVowel {
 		gophWord.WriteString("g"+ word)
 	} else if word[:2] == "xr" {
-			gophWord.WriteString("ge"+ word)
+		gophWord.WriteString("ge"+ word)
 	} else if startVowel == false {
 		if !secondVowel && word[1:3] != "qu" {
 			gophWord.WriteString(word[2:]+word[:2]+"ogo")
@@ -91,6 +91,12 @@ func handleWord(w http.ResponseWriter, r *http.Request ) {
 	fmt.Fprintf( w, "<h3>%s</h3>\n",gopherTranslated )
 }
 
+// Separate punctuation from words.
+func separateSign(word string) (string, string) {
+		sign := word[len(word)-1:]
+		word = word[:len(word)-1]
+		return word, sign
+}
 
 type Sentence struct {
     Sentence string `json:"english-sentence"`
@@ -114,18 +120,30 @@ func handleSentence(w http.ResponseWriter, r *http.Request)  {
 
   sen := strings.Split(sentence.Sentence, " ")
 
-	var gophSen bytes.Buffer
+	var gophSen []string
   for i := range sen {
-		goph, err := translateWord(sen[i])
-		if err != nil {
-			fmt.Println(err)
-			return
+		if strings.IndexAny(sen[i], ".,!?") != -1 {
+			word, sign := separateSign(sen[i])
+			goph, err := translateWord(word)
+			if err != nil {
+				fmt.Println(err)
+				return
+			}
+			gophSen = append(gophSen, goph + sign)
+		} else {
+			goph, err := translateWord(sen[i])
+			if err != nil {
+				fmt.Println(err)
+				return
+			}
+			gophSen = append(gophSen, goph )
 		}
-		gophSen.WriteString(goph+" ")
   }
 
+	gS := strings.Join(gophSen, " ")
+
 	textBytes, err := json.Marshal(map[string]interface{}{
-       "gopher-sentence": gophSen.String()})
+       "gopher-sentence": gS})
 	if err != nil {
 		return
 	}

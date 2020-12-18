@@ -11,13 +11,12 @@ import (
 func main() {
 
 	//TODO loop for test requsts
-	url := "http://localhost:8080/word"
-	// url := "http://localhost:8080/sentence"
+	// url := "http://localhost:8080/word"
+	url := "http://localhost:8080/sentence"
 	fmt.Println("URL:>", url)
 
-	var jsonStr = []byte(`{"english-word":"mqueen"}`)
-	// var jsonStr = []byte(`{"english-sentence":"apple orange xray xfactor chair stool square mqeen"}`)
-	// var jsonStr = []byte(`{"english-sentence":"This orange is xray should be in square"}`)
+	// var jsonStr = []byte(`{"english-word":"mqueen"}`)
+	var jsonStr = []byte(`{"english-sentence":"Apple orange xray, xfactor chair stool square mqeen!"}`)
 	req, err := http.NewRequest("POST", url, bytes.NewBuffer(jsonStr))
 	req.Header.Set("X-Custom-Header", "myvalue")
 	req.Header.Set("Content-Type", "application/json")
