@@ -3,7 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-  "strings"
+  	"strings"
 	"net/http"
 	"bytes"
 	"io/ioutil"
@@ -30,8 +30,6 @@ func translateWord(word string) (string, error) {
 
 	startVowel := bytes.Contains(vowelSet, []byte(word[:1]))
 	secondVowel := bytes.Contains(vowelSet, []byte(word[1:2]))
-
-	fmt.Println(startVowel)
 
 	var gophWord strings.Builder
 
