@@ -45,7 +45,9 @@ func translateWord(word string) (string, error) {
 		} else if word[1:3] == "qu" {
 			gophWord.WriteString(word[3:]+word[:3]+"ogo")
 		}
-	}
+	} else {
+			gophWord.WriteString(word[1:]+word[:1]+"ogo")
+	 }
 	return gophWord.String(), nil
 }
 
