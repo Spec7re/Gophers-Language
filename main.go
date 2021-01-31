@@ -3,7 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-  	"strings"
+	"strings"
 	"net/http"
 	"bytes"
 	"io/ioutil"
@@ -17,8 +17,8 @@ type Word struct {
 func translateWord(word string) (string, error) {
 
 	if len(word) == 0 {
-     return "Error", fmt.Errorf("Must have atleast one symbol.")
-  }
+		return "Error", fmt.Errorf("Must have atleast one symbol.")
+	}
 
 	if strings.IndexAny(word, "'’") != -1 {
 		return "Error", fmt.Errorf("Gophers do not understand short words.")
@@ -47,7 +47,7 @@ func translateWord(word string) (string, error) {
 		}
 	} else {
 			gophWord.WriteString(word[1:]+word[:1]+"ogo")
-	 }
+		}
 	return gophWord.String(), nil
 }
 
@@ -80,8 +80,7 @@ func handleWord(w http.ResponseWriter, r *http.Request ) {
 		return
 	}
 
-	textBytes, err := json.Marshal(map[string]interface{}{
-       "gopher-word": goph})
+	textBytes, err := json.Marshal(map[string]interface{}{"gopher-word": goph})
 	if err != nil {
 		return
 	}
@@ -93,14 +92,15 @@ func handleWord(w http.ResponseWriter, r *http.Request ) {
 
 // Separate punctuation from words.
 func separateSign(word string) (string, string) {
-		sign := word[len(word)-1:]
-		word = word[:len(word)-1]
-		return word, sign
+	sign := word[len(word)-1:]
+	word = word[:len(word)-1]
+	return word, sign
 }
 
 type Sentence struct {
-    Sentence string `json:"english-sentence"`
+	Sentence string `json:"english-sentence"`
 }
+
 // Sentence json decode/encode and translation
 func handleSentence(w http.ResponseWriter, r *http.Request)  {
 	fmt.Fprintf( w, "<h1>%s</h1>\n", "Endpoint for gopher Sentence translation" )
@@ -118,10 +118,10 @@ func handleSentence(w http.ResponseWriter, r *http.Request)  {
 		return
 	}
 
-  sen := strings.Split(sentence.Sentence, " ")
+	sen := strings.Split(sentence.Sentence, " ")
 
 	var gophSen []string
-  for i := range sen {
+	for i := range sen {
 		if strings.IndexAny(sen[i], ".,!?") != -1 {
 			word, sign := separateSign(sen[i])
 			goph, err := translateWord(word)
@@ -138,12 +138,11 @@ func handleSentence(w http.ResponseWriter, r *http.Request)  {
 			}
 			gophSen = append(gophSen, goph )
 		}
-  }
+	}
 
 	gS := strings.Join(gophSen, " ")
 
-	textBytes, err := json.Marshal(map[string]interface{}{
-       "gopher-sentence": gS})
+	textBytes, err := json.Marshal(map[string]interface{}{"gopher-sentence": gS})
 	if err != nil {
 		return
 	}
